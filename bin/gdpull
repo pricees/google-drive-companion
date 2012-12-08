@@ -3,8 +3,18 @@ require "google_drive_companion"
 
 begin
   res = GoogleDriveCompanion::Socket.instance
+
+  # If it ain't an absolute path, make it so!
+  ARGV[1] ||= GoogleDriveCompanion::Session.split_file(ARGV[0]).last
+  unless ARGV[1][/^\//]
+    ARGV[1] = File.join(Dir.pwd, ARGV[1])
+  end
+
   $stdout.puts res.digest(["pull"] + ARGV)
 
 rescue Errno::ECONNREFUSED, Errno::ENOENT
-  $stdout.puts "Error connecting to server, please try again after running: \n$ gdrive s"
+  $stdout.puts <<EOS
+Error connecting to server, please try again after running:
+$ gdrive start
+EOS
 end

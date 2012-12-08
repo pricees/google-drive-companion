@@ -177,6 +177,8 @@ module GoogleDriveCompanion
       local_file ||= remote_ary.last
 
       get_file(remote_ary).download_to_file(local_file)
+    rescue
+      raise "problem locating remote file: #{remote_file}"
     end
 
     # Public: Deletes remote folder

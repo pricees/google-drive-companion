@@ -6,5 +6,8 @@ begin
   $stdout.puts res.digest(["mv"] + ARGV)
 
 rescue Errno::ECONNREFUSED, Errno::ENOENT
-  $stdout.puts "Error connecting to server, please try again after running: \n$ gdrive s"
+  $stdout.puts <<EOS
+Error connecting to server, please try again after running:
+$ gdrive start
+EOS
 end

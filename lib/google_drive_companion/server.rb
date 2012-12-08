@@ -62,6 +62,12 @@ module GoogleDriveCompanion
       msg_pump.join
     end
 
+    def respond(s, msg)
+      s.send(msg, 0)
+    rescue Errno::EPIPE
+      $stderr.puts "Socket closed, meh"
+    end
+
     def msg_pump
       Thread.new do
         loop do
@@ -70,19 +76,19 @@ module GoogleDriveCompanion
             while (cmd = s.recv(1000))
               cmd = JSON.parse(cmd)
               case cmd.first
-              when "close!"
+              when "stop"
                 close!
-              when "help!"
-                s.send(File.read("lib/help.txt"), 0)
+              when "help"
+                respond(s, File.read("lib/help.txt"))
               else
                 GoogleDriveCompanion::Session.handle_msg(cmd)
-                s.send("[#{cmd.first}] Success!", 0)
+                respond(s, "[#{cmd.first}] Success!")
               end
             end
           rescue Exception => bang
             tmp = "Server error: #{bang}"
             $stderr.puts tmp
-            s.send(tmp, 0)
+            respond(s, tmp)
           end
         end
       end

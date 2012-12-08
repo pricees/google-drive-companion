@@ -2,7 +2,7 @@
 require "google_drive_companion"
 
 case ARGV[0].downcase
-when "s"
+when "start"
   GoogleDriveCompanion::Server.instance.run!  ARGV[1]
 else
   begin
@@ -10,6 +10,9 @@ else
     puts instance.digest(ARGV)
     instance.close
   rescue Errno::ECONNREFUSED, Errno::ENOENT
-    puts "Error connecting to server, please try again after running: \n$ gdrive s"
+    $stdout.puts <<EOS
+Error connecting to server, please try again after running:
+$ gdrive start
+EOS
   end
 end
