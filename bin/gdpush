@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+require "google_drive"
+require_relative "login.rb"
+p $session
+$session.files.each { |file| p file.title }
+
+puts "Hello gd push"

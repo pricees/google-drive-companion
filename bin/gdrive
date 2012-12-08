@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+require "google_drive_companion"
+
+case ARGV[0].downcase
+when "s"
+  GoogleDriveCompanion::Server.instance.run!  ARGV[1]
+else
+  begin
+    instance = GoogleDriveCompanion::Socket.instance
+    p instance.digest(ARGV)
+    instance.close
+  rescue Errno::ECONNREFUSED, Errno::ENOENT
+    puts "Error connecting to server, please try again after running: \n$ gdrive s"
+  end
+end
