@@ -3,17 +3,12 @@ module GoogleDriveCompanion
   class Server
     include Singleton
 
-    def session
-      load "./lib/google_drive_companion/session.rb"
-      GoogleDriveCompanion::Session
-    end
-
     def socket_file
       ENV["gdc_socket"] || "/tmp/gdc_socket.sock"
     end
 
     def pid_file
-      ENV["gdcompanion_pid"] || "/tmp/gdcompanion.pid"
+      ENV["gdc_pid"] || "/tmp/gdc.pid"
     end
 
     def check_if_running!
@@ -21,10 +16,11 @@ module GoogleDriveCompanion
         puts "Socket file #{socket_file} in use"
         leave = true
       end
+
       if File.exists?(pid_file)
         pid = File.read(pid_file)
         puts "Server may be running on #{pid}\n**************\n"
-        leave = true
+        leave ||= true
       end
       leave && exit(1)
     end
@@ -79,12 +75,14 @@ module GoogleDriveCompanion
               when "help!"
                 s.send(File.read("lib/help.txt"), 0)
               else
-                res = session.handle_msg(cmd)
+                GoogleDriveCompanion::Session.handle_msg(cmd)
                 s.send("[#{cmd.first}] Success!", 0)
               end
             end
           rescue Exception => bang
-            $stdout.puts "Server error: #{bang}"
+            tmp = "Server error: #{bang}"
+            $stderr.puts tmp
+            s.send(tmp, 0)
           end
         end
       end

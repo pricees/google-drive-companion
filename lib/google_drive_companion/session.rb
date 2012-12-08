@@ -46,6 +46,10 @@ module GoogleDriveCompanion
       session.root_collection
     end
 
+    # Public: Call methods, check against whitelist
+    #
+    #
+    # Returns [something]
     PROTECTED_METHODS = %w[push pull mv del]
     def send_protected(ary)
       if PROTECTED_METHODS.include?(ary.first)

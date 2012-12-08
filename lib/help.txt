@@ -1,0 +1,9 @@
+======================
+Google Drive Companion
+======================
+
+gdriver s    # start server
+
+gpush [local file] [remote file]
+gpush /tmp/foo                    # push local file /tmp/foo -> remote foo
+gpush /tmp/foo remote/path/bar # push local file /tmp/foo -> remote/path/bar

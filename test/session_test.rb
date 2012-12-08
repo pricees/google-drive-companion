@@ -21,14 +21,14 @@ describe GoogleDriveCompanion::Session do
 
   it "sends methods" do
     ary = %w[mv bar baz]
-    @module.expects(:send).with(:mv, %w[bar baz])
+    @module.expects(:send).with(:mv, "bar", "baz")
     @module.send_protected(ary)
   end
 
   it "handles message" do
     hsh = { "foo" => "bar" }
     @module.expects(:send_protected).with(hsh)
-    @module.handle_msg(hsh.to_json)
+    @module.handle_msg(hsh)
   end
 
   describe "handles files" do
