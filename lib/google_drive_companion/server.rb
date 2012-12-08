@@ -46,7 +46,7 @@ module GoogleDriveCompanion
 
     # Attempts to write the pid of the forked process to the pid file.
     # Kills process if write unsuccesfull.
-    def write pid, pidfile
+    def write(pid, pidfile)
       File.open pidfile, "w" do |f|
         f.write pid
         f.close
