@@ -4,6 +4,20 @@ Google Drive Companion
 
 gdriver s    # start server
 
-gpush [local file] [remote file]
-gpush /tmp/foo                    # push local file /tmp/foo -> remote foo
-gpush /tmp/foo remote/path/bar # push local file /tmp/foo -> remote/path/bar
+== Upload Files ==
+gdpush [local file] [remote file]
+gdpush /tmp/foo remote/path/bar   # push local file /tmp/foo -> remote/path/bar
+gdpush /tmp/foo [remote file]     # push local file /tmp/foo -> remote /tmp/foo
+gdpush relative.txt [remote file] # push file in current directory, will retain directory structure if remote file unspecified, beware!
+
+== Download Files ==
+gdpull /remote/path/bar.txt                 # Download to the relative path (./bar.txt)
+gdpull /remote/path/bar.txt /tmp/foo.txt    # Download to absoltute path and filename
+
+== Move Files ==
+gdmv /foo/bar.txt /new/path  # push remote file to different directory (/foo/bar.txt - > new/path/bar.txt)
+
+== Remove Remote Files ==
+gddel /new/path/bar.txt  # Delete a file
+gddel /new/              # Delete the whole directory (AHHHHHHHHHH!)
+

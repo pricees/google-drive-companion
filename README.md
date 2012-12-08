@@ -24,7 +24,20 @@ Or install it yourself as:
 
 ## Usage
 
-Run the server server (def. as a daemon):
+Get help
+
+    gdrive help
+
+Start the server using environment variables
+
+   username=AzureDiamond@gmail.com password=hunter2 gdrive start
+
+Or create a file in your ~/.google_drive/conf.yaml:
+
+    username: AzureDiamond@gmail.com
+    password: hunter2
+
+Toggle the foreground/daemon flag when you start the server (def. as a daemon):
 
     gdrive start [run_in_foreground]
 

@@ -79,7 +79,8 @@ module GoogleDriveCompanion
               when "stop"
                 close!
               when "help"
-                respond(s, File.read("lib/help.txt"))
+                help_file = File.join(File.dirname(__FILE__), "..", "help.txt")
+                respond(s, File.read(help_file))
               else
                 GoogleDriveCompanion::Session.handle_msg(cmd)
                 respond(s, "[#{cmd.first}] Success!")
