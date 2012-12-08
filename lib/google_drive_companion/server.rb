@@ -1,3 +1,4 @@
+# This module sets up a unix socket daemon process to listen out for commands
 module GoogleDriveCompanion
   class Server
     include Singleton
@@ -71,12 +72,15 @@ module GoogleDriveCompanion
           begin
             s = server.accept
             while (cmd = s.recv(1000))
-              case cmd
+              cmd = JSON.parse(cmd)
+              case cmd.first
               when "close!"
                 close!
+              when "help!"
+                s.send(File.read("lib/help.txt"), 0)
               else
                 res = session.handle_msg(cmd)
-                s.send(res, 0)
+                s.send("[#{cmd.first}] Success!", 0)
               end
             end
           rescue Exception => bang

@@ -49,7 +49,7 @@ module GoogleDriveCompanion
     PROTECTED_METHODS = %w[push pull mv del]
     def send_protected(ary)
       if PROTECTED_METHODS.include?(ary.first)
-        send(ary.shift.to_sym, ary)
+        send(ary.shift.to_sym, *ary)
       end
     end
 
@@ -187,7 +187,7 @@ module GoogleDriveCompanion
     end
 
     def handle_msg(cmd)
-      send_protected(JSON.parse(cmd)) || "bad command!"
+      send_protected(cmd) || "bad command!"
     end
 
     def session

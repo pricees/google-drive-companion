@@ -7,7 +7,7 @@ when "s"
 else
   begin
     instance = GoogleDriveCompanion::Socket.instance
-    p instance.digest(ARGV)
+    puts instance.digest(ARGV)
     instance.close
   rescue Errno::ECONNREFUSED, Errno::ENOENT
     puts "Error connecting to server, please try again after running: \n$ gdrive s"

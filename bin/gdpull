@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+require "google_drive_companion"
+begin
+  res = GoogleDriveCompanion::Socket.instance
+  puts res.digest(["pull"] + ARGV)
+rescue
+
+end

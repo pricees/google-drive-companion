@@ -2,7 +2,7 @@
 require "google_drive_companion"
 begin
   res = GoogleDriveCompanion::Socket.instance
-  puts res.digest(["push"] + ARGV)
+  puts res.digest(["del"] + ARGV)
 rescue
 
 end
