@@ -32,13 +32,21 @@ Upload a file:
 
     gdpush /path/to/file.txt
 
+Upload a file from the current dir:
+
+    gdpush this.txt
+
+Upload a file from the current dir, to a remote location:
+
+    gdpush this.txt remote/path/to/that.txt
+
 Move a remote file to another remote folder:
 
     gdmv /path/to/file.txt /another/path
 
 Download the new file:
 
-    gddel /another/path/file.txt
+    gdpull /another/path/file.txt
 
 Trash the file:
 
