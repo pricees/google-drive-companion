@@ -39,6 +39,9 @@ module GoogleDriveCompanion
       name.gsub(/^#{sep}+/, '').split(sep)
     end
 
+    # Public: Return the top level folder of the accounts google drive
+    #
+    # Returns GoogleDrive::Collection
     def root
       session.root_collection
     end
@@ -67,7 +70,6 @@ module GoogleDriveCompanion
     def traverse(collections, force = false)
       node = root
       collections.each do |subcollection|
-
         new_node = node.subcollection_by_title(subcollection)
 
         if new_node
@@ -82,6 +84,22 @@ module GoogleDriveCompanion
       node
     end
 
+    # Public: Get a file from Google Drive
+    #
+    # ary - Array of collections, last element is title of file
+    #
+    # Example
+    #
+    #   get_file(["foo", "bar", "faz.rb"])
+    #   # => <GoogleDrive::File faz.rb>
+    #
+    #  Returns a GoogleDrive::File
+    def get_file(ary)
+      title = ary.pop
+      traverse(ary).
+        files({ "title" => title, "title-exact" => "true" })[0]
+    end
+
     # Public: Move file from one remote location to another
     #
     # src   - Source remote path to file
@@ -92,15 +110,21 @@ module GoogleDriveCompanion
     #   mv("/old/path/to/file.txt", "/new/path/")
     #   # => mil;
     #
+    # Raise RuntimeError is remote file doesn't exist
     # Returns nil
     def mv(src, dest, force = true)
       src_ary    = split_file(src)
-      file_title = src_ary.pop
-      src_node   = traverse(src_ary)
-      file       = src_node.subcollection_by_title(file_title)
+      src_node   = traverse(src_ary[0...-1])
+      file       = get_file(src_ary)
 
-      traverse(split_file(dest), force).add(file)
-      src_node.remove(file)
+      if file
+        traverse(split_file(dest), force).add(file)
+        src_node.remove(file)
+      else
+        raise "Remote file: #{file} doesn't exist yo!"
+      end
+
+      nil
     end
 
 
@@ -121,9 +145,9 @@ module GoogleDriveCompanion
     def push(local_file, remote_file = nil, force = true)
 
       remote_file ||= local_file
-      ary         = split_file(remote_file)
-      local_file  = ary.pop
-      file        = session.upload_from_file(local_file, local_file)
+      ary           = split_file(remote_file)
+      remote_fn     = ary.pop
+      file          = session.upload_from_file(local_file, remote_fn)
 
       unless ary.empty?
         traverse(ary, force).add(file)
@@ -142,11 +166,13 @@ module GoogleDriveCompanion
     #   pull("/remote/path/to/text.txt", "/tmp/text.txt")
     #   # => [ file /tmp/text.txt ]
     #
-    # Returns GoogleDrive::File
+    # Returns an integer
     def pull(remote_file, local_file = nil)
-      ary  = split_file(remote_file)
-      local_file ||= ary.last
-      traverse(ary).download_to_file(local_file)
+
+      remote_ary   = split_file(remote_file)
+      local_file ||= remote_ary.last
+
+      get_file(remote_ary).download_to_file(local_file)
     end
 
     # Public: Deletes remote folder
@@ -156,7 +182,7 @@ module GoogleDriveCompanion
     #
     # Returns boolean
     def del(file, permanently = false)
-      traverse(split_file(file)).delete(permanently)
+      get_file(split_file(file)).delete(permanently)
       permanently
     end
 
@@ -169,5 +195,3 @@ module GoogleDriveCompanion
     end
   end
 end
-
-

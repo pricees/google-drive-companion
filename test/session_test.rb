@@ -105,7 +105,7 @@ describe GoogleDriveCompanion::Session do
 
     it "pushes a file with collection" do
       m = mock
-      m.expects(:upload_from_file).with("test.rb", "test.rb").returns(:remote_file)
+      m.expects(:upload_from_file).with("foo/bar/test.rb", "test.rb").returns(:remote_file)
       @module.expects(:session).returns(m)
 
       ary = %w(foo bar test.rb)
@@ -122,14 +122,14 @@ describe GoogleDriveCompanion::Session do
     it "pulls file to local file" do
       m = mock
       m.expects(:download_to_file).with("/tmp/out")
-      @module.expects(:traverse).with(%w(foo bar baz.txt)).returns(m)
+      @module.expects(:get_file).with(%w(foo bar baz.txt)).returns(m)
       @module.pull("foo/bar/baz.txt", "/tmp/out")
     end
 
     it "pulls file to local defaults" do
       m = mock
       m.expects(:download_to_file).with("baz.txt")
-      @module.expects(:traverse).with(%w(foo bar baz.txt)).returns(m)
+      @module.expects(:get_file).with(%w(foo bar baz.txt)).returns(m)
       @module.pull("foo/bar/baz.txt")
     end
   end
@@ -140,7 +140,7 @@ describe GoogleDriveCompanion::Session do
     m = mock
     m.expects(:delete).with(:blah).returns(:blah)
 
-    @module.expects(:traverse).with(%w[path to txt]).returns(m)
+    @module.expects(:get_file).with(%w[path to txt]).returns(m)
 
     @module.del(path, :blah).must_equal(:blah)
   end
@@ -150,13 +150,11 @@ describe GoogleDriveCompanion::Session do
     new_path = "/new/path/txt"
 
     m = mock
-    m.expects(:subcollection_by_title).with("txt").returns(:football)
-    m.expects(:remove).with(:football)
-
     n = mock
-    n.expects(:add).with(:football).returns(:success)
+    n.expects(:add).with(m).returns(:success)
 
-    @module.expects(:traverse).with(%w[old path to]).returns(m)
+    @module.expects(:traverse).with(%w[old path to]).returns(mock(remove: true))
+    @module.expects(:get_file).with(%w[old path to txt]).returns(m)
     @module.expects(:traverse).with(%w[new path txt], true).returns(n)
 
     @module.mv(old_path, new_path).must_be :nil?
