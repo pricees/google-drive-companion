@@ -3,14 +3,14 @@ module GoogleDriveCompanion
   module Session
     extend self
 
-    # Quick n' dirty, get authentication crediables from ~/.google_drive/conf.yaml
+    # Set authentication creditials in ~/.google_drive/conf.yaml
     #
     # ~/.google_drive/conf.yaml:
     #
     # username: AzureDiamond@gmail.com
     # password: hunter2
     #
-    # OR
+    # OR at the env level:
     #
     # username=AzureDiamond@gmail.com password=hunter2 [cmd] [arg1, ... ]
     #

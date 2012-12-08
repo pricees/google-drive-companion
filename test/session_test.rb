@@ -16,7 +16,10 @@ describe GoogleDriveCompanion::Session do
   end
 
   it "has a session" do
-    @module.session.wont_be :nil?
+    hsh = { "username" => "foo", "password" => "bar" }
+    @module.expects(:configs).times(2).returns(hsh)
+    GoogleDrive.expects(:login).with("foo", "bar").returns(:jeah)
+    @module.session.must_equal(:jeah)
   end
 
   it "sends methods" do
