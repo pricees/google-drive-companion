@@ -30,7 +30,7 @@ Get help
 
 Start the server using environment variables
 
-   username=AzureDiamond@gmail.com password=hunter2 gdrive start
+    username=AzureDiamond@gmail.com password=hunter2 gdrive start
 
 Or create a file in your ~/.google_drive/conf.yaml:
 
