@@ -131,7 +131,6 @@ module GoogleDriveCompanion
       nil
     end
 
-
     # Public: Uploads local file to remote local
     #
     # remote_file - Remote file path, File::SEPARATOR delimited

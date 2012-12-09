@@ -4,11 +4,11 @@ module GoogleDriveCompanion
     include Singleton
 
     def socket_file
-      ENV["gdc_socket"] || "/tmp/gdc_socket.sock"
+      ENV["gdc_socket"] || File.join("", "tmp", "gdc_socket.sock")
     end
 
     def pid_file
-      ENV["gdc_pid"] || "/tmp/gdc.pid"
+      ENV["gdc_pid"] || File.join("", "tmp", "gdc.pid")
     end
 
     def check_if_running!

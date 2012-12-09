@@ -8,7 +8,7 @@ module GoogleDriveCompanion
     include Singleton
 
     def socket_file
-      ENV["gdc_socket"] || "/tmp/gdc_socket.sock"
+      ENV["gdc_socket"] || File.join("", "tmp", "gdc_socket.sock")
     end
 
     def socket
