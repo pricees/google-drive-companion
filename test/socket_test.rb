@@ -7,6 +7,8 @@ describe GoogleDriveCompanion::Socket do
   end
 
   it "returns socket filename" do
+    ENV.delete("gdc_socket")
+
     @instance.socket_file.must_equal "/tmp/gdc_socket.sock"
 
     ENV["gdc_socket"] = "/foo"

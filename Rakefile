@@ -1,15 +1,12 @@
 require "bundler/gem_tasks"
 
+require 'rake/testtask'
 
-
-task default:  "test:all"
-
-desc "Test all test/*test.rb files"
-namespace :test do
-  task :all do
-    FileList['test/*test.rb'].each do |fn|
-      puts "TESTING: #{fn}"
-      sh "ruby -Ilib:test #{fn}"
-    end
-  end
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  $foo = t.test_files = FileList['test/**/*_test.rb']
+  t.verbose = true
+#  t.warning = true
 end
+
+task default: "test"
