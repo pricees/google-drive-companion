@@ -69,28 +69,26 @@ module GoogleDriveCompanion
     end
 
     def msg_pump
-      Thread.new do
-        loop do
-          begin
-            s = server.accept
-            while (cmd = s.recv(1000))
-              cmd = JSON.parse(cmd)
-              case cmd.first
-              when "stop"
-                close!
-              when "help"
-                help_file = File.join(File.dirname(__FILE__), "..", "help.txt")
-                respond(s, File.read(help_file))
-              else
-                GoogleDriveCompanion::Session.handle_msg(cmd)
-                respond(s, "[#{cmd.first}] Success!")
-              end
+      loop do
+        begin
+          s = server.accept
+          while (cmd = s.recv(1000))
+            cmd = JSON.parse(cmd)
+            case cmd.first
+            when "stop"
+              close!
+            when "help"
+              help_file = File.join(File.dirname(__FILE__), "..", "help.txt")
+              respond(s, File.read(help_file))
+            else
+              GoogleDriveCompanion::Session.handle_msg(cmd)
+              respond(s, "[#{cmd.first}] Success!")
             end
-          rescue Exception => bang
-            tmp = "Server error: #{bang}"
-            $stderr.puts tmp
-            respond(s, tmp)
           end
+        rescue Exception => bang
+          tmp = "Server error: #{bang}"
+          $stderr.puts tmp
+          respond(s, tmp)
         end
       end
     end
